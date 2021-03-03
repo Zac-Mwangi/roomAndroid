@@ -43,7 +43,7 @@ public class AddNoteActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.save_note:
                 //saveNote();
-                Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "save", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
