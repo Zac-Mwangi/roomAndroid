@@ -2,6 +2,7 @@ package com.example.architectures;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +17,14 @@ public class AddNoteActivity extends AppCompatActivity {
     private EditText editTextDescription;
     private NumberPicker numberPickerPriority;
 
+    public static final String EXTRA_TITLE =
+            "com.example.architectures.EXTRA_TITLE";
+    public static final String EXTRA_DESCRIPTION =
+            "com.example.architectures.EXTRA_DESCRIPTION";
+    public static final String EXTRA_PRIORITY =
+            "com.example.architectures.EXTRA_PRIORITY";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,8 +37,6 @@ public class AddNoteActivity extends AppCompatActivity {
         numberPickerPriority.setMaxValue(10);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         setTitle("Add Note");
-
-
     }
 
     @Override
@@ -42,11 +49,26 @@ public class AddNoteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.save_note:
-                //saveNote();
-                Toast.makeText(this, "save", Toast.LENGTH_SHORT).show();
+                saveNote();
+                //Toast.makeText(this, "save", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    private void saveNote() {
+        String title = editTextTitle.getText().toString();
+        String description = editTextDescription.getText().toString();
+        int priority = numberPickerPriority.getValue();
+        if (title.trim().isEmpty() || description.trim().isEmpty()) {
+            Toast.makeText(this, "Please insert a title and description", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent data = new Intent();
+        data.putExtra(EXTRA_TITLE, title);
+        data.putExtra(EXTRA_DESCRIPTION, description);
+        data.putExtra(EXTRA_PRIORITY, priority);
+        setResult(RESULT_OK, data);
+        finish();
     }
 }
