@@ -30,12 +30,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         FloatingActionButton floatingActionButton = findViewById(R.id.btn_add_note);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddNoteActivity.class);
-                startActivityForResult(intent, ADD_NOTE_REQUEST);
-            }
+        floatingActionButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, AddNoteActivity.class);
+            startActivityForResult(intent, ADD_NOTE_REQUEST); //so that we can latter get our input
         });
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
@@ -66,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 noteViewModel.delete(adapter.getNoteAt(viewHolder.getAdapterPosition()));
                 Toast.makeText(MainActivity.this, "Note deleted", Toast.LENGTH_SHORT).show();
+                //you add more features eg swipe left different command or right, undo operations etc
             }
         }).attachToRecyclerView(recyclerView);
     }

@@ -24,7 +24,6 @@ public class AddNoteActivity extends AppCompatActivity {
     public static final String EXTRA_PRIORITY =
             "com.example.architectures.EXTRA_PRIORITY";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

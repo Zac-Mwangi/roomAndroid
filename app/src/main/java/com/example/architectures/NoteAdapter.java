@@ -38,6 +38,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
     public Note getNoteAt(int position) {
         return notes.get(position);
     }
+
     class NoteHolder extends RecyclerView.ViewHolder {
         private TextView textViewTitle;
         private TextView textViewDescription;
