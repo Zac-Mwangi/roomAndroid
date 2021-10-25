@@ -9,7 +9,7 @@ import androidx.room.Update;
 
 import java.util.List;
 
-//interface or abstract because we dont provide method body but room does it for us
+//interface or abstract because we don't provide method body but room does it for us
 //DAU we define all database operations
 @Dao
 public interface NoteDao {
