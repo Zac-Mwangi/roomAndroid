@@ -9,12 +9,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -22,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private NoteViewModel noteViewModel;
     public static final int ADD_NOTE_REQUEST = 1;
     public static final int EDIT_NOTE_REQUEST = 2;
+
+    String json;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
                 //update our recycler view
                 //Toast.makeText(MainActivity.this, "yayee", Toast.LENGTH_SHORT).show();
                 adapter.setNotes(notes);
+
+
+                //worked
+
+                Gson gson = new Gson();
+                json = gson.toJson(notes);
+//                Toast.makeText(getApplicationContext(), json, Toast.LENGTH_SHORT).show();
             }
         });
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
@@ -124,6 +135,17 @@ public class MainActivity extends AppCompatActivity {
                 noteViewModel.deleteAllNotes();
                 Toast.makeText(this, "All notes deleted", Toast.LENGTH_SHORT).show();
                 return true;
+
+            case R.id.Toast:
+                Log.d("JSON RESPONSE",json);
+                if(json.equals("[]")){
+                    Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(this, json, Toast.LENGTH_SHORT).show();
+                }
+                noteViewModel.deleteAllNotes();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
