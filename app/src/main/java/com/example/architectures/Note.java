@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "note_table") //default table name is from class name
 public class Note {
+
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String title;
@@ -23,9 +24,11 @@ public class Note {
         this.priority = priority;
     }
 
+    //No need for id on constructor because we don't provide it its auto auto increased
     public void setId(int id) {
         this.id = id;
     }
+
 
     //for room to persist the values n database we add getter method
     public int getId() {
