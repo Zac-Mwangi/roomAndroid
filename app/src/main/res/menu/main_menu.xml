@@ -8,6 +8,6 @@
 
     <item
         android:id="@+id/Toast"
-        android:title="Toast"
+        android:title="Push To Db"
         app:showAsAction="never" />
 </menu>

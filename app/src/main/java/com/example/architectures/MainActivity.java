@@ -7,18 +7,41 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.architectures.Retrofit.Api;
+import com.example.architectures.Retrofit.ApiClient;
+import com.example.architectures.Retrofit.Model;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private NoteViewModel noteViewModel;
@@ -27,10 +50,15 @@ public class MainActivity extends AppCompatActivity {
 
     String json;
 
+    Vibrator v ;
+    private ProgressDialog pDialog;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         FloatingActionButton floatingActionButton = findViewById(R.id.btn_add_note);
         floatingActionButton.setOnClickListener(v -> {
@@ -44,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
 
         final NoteAdapter adapter = new NoteAdapter();
         recyclerView.setAdapter(adapter);
+
+        v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
 
 
         //ask system for view model
@@ -61,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
                 Gson gson = new Gson();
                 json = gson.toJson(notes);
 //                Toast.makeText(getApplicationContext(), json, Toast.LENGTH_SHORT).show();
+
+               // Toast.makeText(getApplicationContext(), json+"", Toast.LENGTH_SHORT).show();
             }
         });
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
@@ -141,13 +174,97 @@ public class MainActivity extends AppCompatActivity {
                 if(json.equals("[]")){
                     Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(this, json, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, json, Toast.LENGTH_SHORT).show();
+                    AddNote();
                 }
-                noteViewModel.deleteAllNotes();
+                //noteViewModel.deleteAllNotes();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    public void AddNote(){
+        displayLoader();
+
+        Api api = ApiClient.getClient().create(Api.class);
+        Call<Model> add_note = api.add_note(json);
+
+        add_note.enqueue(new Callback<Model>() {
+            @Override
+            public void onResponse(Call<Model> call, Response<Model> response) {
+                pDialog.dismiss();
+
+                boolean err = response.body().isError();
+                if(!err){
+                    //noteViewModel.deleteAllNotes();
+                }else{
+                    v.vibrate(100);
+                }
+
+//                if(!err){
+//                    noteViewModel.deleteAllNotes();
+//                }else{
+//                    v.vibrate(100);
+//                }
+
+                Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<Model> call, Throwable t) {
+                v.vibrate(100);
+                pDialog.dismiss();
+
+                    Toast.makeText(MainActivity.this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Err", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void displayLoader() {
+        pDialog = new ProgressDialog(MainActivity.this,R.style.MyAlertDialogStyle);
+        pDialog.setMessage("Adding Notes please wait...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
+    }
+
+    private void AddNoteVolley() {
+//display loader
+
+        String add_N = "http://192.168.1.47/roomAndroid/php/add_note.php";
+        displayLoader();
+
+        StringRequest request = new StringRequest(Request.Method.POST, add_N, response -> {
+            //dismiss loader
+            pDialog.dismiss();
+
+            try {
+                JSONObject obj = new JSONObject(response);
+                if (obj.getBoolean("error")) {
+                    v.vibrate(100);
+                    Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }, error -> {
+            v.vibrate(100);
+            pDialog.dismiss();
+            Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+            //Display error message whenever an error occurs
+        }){
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+
+                params.put("input", json);
+                return params;
+            }
+        };
+        Volley.newRequestQueue(this).add(request);
     }
 }
