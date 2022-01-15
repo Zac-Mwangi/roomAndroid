@@ -84,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(List<Note> notes) {
                 //update our recycler view
                 //Toast.makeText(MainActivity.this, "yayee", Toast.LENGTH_SHORT).show();
-                adapter.setNotes(notes);
+                //adapter.setNotes(notes); for old adapter
+                adapter.submitList(notes);
 
 
                 //worked

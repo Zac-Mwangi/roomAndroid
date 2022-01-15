@@ -11,6 +11,8 @@ import java.util.List;
 
 //interface or abstract because we don't provide method body but room does it for us
 //DAU we define all database operations
+
+// create one DAO per entity 
 @Dao
 public interface NoteDao {
     //create methods for all operations we want to do

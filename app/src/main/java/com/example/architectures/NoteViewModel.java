@@ -10,6 +10,8 @@ import java.util.List;
 
 public class NoteViewModel extends AndroidViewModel {
 
+    //create constructor matching supper
+
     private NoteRepository repository;
     private LiveData<List<Note>> allNotes;
 

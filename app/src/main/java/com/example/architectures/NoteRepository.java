@@ -33,7 +33,7 @@ public class NoteRepository {
     public LiveData<List<Note>> getAllNote() {
         return allNote;
     }
-    //use AsyncTask
+    //use AsyncTask for all others except LiveData
     private static class InsertNoteAsyncTask extends AsyncTask<Note,Void,Void>{
         private NoteDao noteDao;
 
