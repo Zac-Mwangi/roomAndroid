@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     String json;
 
-    Vibrator v ;
+    Vibrator v;
     private ProgressDialog pDialog;
 
 
@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 
-
         //ask system for view model
         noteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
         noteViewModel.getAllNotes().observe(this, new Observer<List<Note>>() {
@@ -94,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 json = gson.toJson(notes);
 //                Toast.makeText(getApplicationContext(), json, Toast.LENGTH_SHORT).show();
 
-               // Toast.makeText(getApplicationContext(), json+"", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(), json+"", Toast.LENGTH_SHORT).show();
             }
         });
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
@@ -103,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
             }
+
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 noteViewModel.delete(adapter.getNoteAt(viewHolder.getAdapterPosition()));
@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -133,8 +134,7 @@ public class MainActivity extends AppCompatActivity {
             Note note = new Note(title, description, priority);
             noteViewModel.insert(note);
             Toast.makeText(this, "Note saved", Toast.LENGTH_SHORT).show();
-        }
-        else if (requestCode == EDIT_NOTE_REQUEST && resultCode == RESULT_OK) {
+        } else if (requestCode == EDIT_NOTE_REQUEST && resultCode == RESULT_OK) {
             int id = data.getIntExtra(AddEditNoteActivity.EXTRA_ID, -1);
 
             if (id == -1) {
@@ -151,17 +151,18 @@ public class MainActivity extends AppCompatActivity {
             noteViewModel.update(note);
 
             Toast.makeText(this, "Note updated", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
             Toast.makeText(this, "Note not saved", Toast.LENGTH_SHORT).show();
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main_menu, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -171,10 +172,10 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.Toast:
-                Log.d("JSON RESPONSE",json);
-                if(json.equals("[]")){
+                Log.d("JSON RESPONSE", json);
+                if (json.equals("[]")) {
                     Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     //Toast.makeText(this, json, Toast.LENGTH_SHORT).show();
                     AddNote();
                 }
@@ -185,7 +186,8 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-    public void AddNote(){
+
+    public void AddNote() {
         displayLoader();
 
         Api api = ApiClient.getClient().create(Api.class);
@@ -197,9 +199,9 @@ public class MainActivity extends AppCompatActivity {
                 pDialog.dismiss();
 
                 boolean err = response.body().isError();
-                if(!err){
+                if (!err) {
                     //noteViewModel.deleteAllNotes();
-                }else{
+                } else {
                     v.vibrate(100);
                 }
 
@@ -217,13 +219,14 @@ public class MainActivity extends AppCompatActivity {
                 v.vibrate(100);
                 pDialog.dismiss();
 
-                    Toast.makeText(MainActivity.this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 //Toast.makeText(getApplicationContext(), "Err", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
     private void displayLoader() {
-        pDialog = new ProgressDialog(MainActivity.this,R.style.MyAlertDialogStyle);
+        pDialog = new ProgressDialog(MainActivity.this, R.style.MyAlertDialogStyle);
         pDialog.setMessage("Adding Notes please wait...");
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
@@ -245,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
                 if (obj.getBoolean("error")) {
                     v.vibrate(100);
                     Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
-                }else {
+                } else {
                     Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                 }
 
@@ -257,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
             pDialog.dismiss();
             Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
             //Display error message whenever an error occurs
-        }){
+        }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();

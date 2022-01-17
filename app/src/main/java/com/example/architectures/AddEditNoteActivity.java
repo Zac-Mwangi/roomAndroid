@@ -56,6 +56,7 @@ public class AddEditNoteActivity extends AppCompatActivity {
         menuInflater.inflate(R.menu.add_note_menu, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -67,6 +68,7 @@ public class AddEditNoteActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
     private void saveNote() {
         String title = editTextTitle.getText().toString();
         String description = editTextDescription.getText().toString();

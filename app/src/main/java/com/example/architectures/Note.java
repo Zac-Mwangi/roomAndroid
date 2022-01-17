@@ -10,8 +10,8 @@ public class Note {
     private int id;
     private String title;
     private String description;
-   // @ColumnInfo(name = "priority_column") //changes the column name
-   // @Ignore //ignore field thus field wont be added to table
+    // @ColumnInfo(name = "priority_column") //changes the column name
+    // @Ignore //ignore field thus field wont be added to table
     private int priority;
 
     //constructor apart from id

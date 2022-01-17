@@ -21,16 +21,19 @@ public class NoteViewModel extends AndroidViewModel {
         allNotes = repository.getAllNote();
     }
 
-    public void insert(Note note){
+    public void insert(Note note) {
         repository.insert(note);
     }
-    public void update(Note note){
+
+    public void update(Note note) {
         repository.update(note);
     }
-    public void delete(Note note){
+
+    public void delete(Note note) {
         repository.delete(note);
     }
-    public void deleteAllNotes(){
+
+    public void deleteAllNotes() {
         repository.deleteAllNotes();
     }
 

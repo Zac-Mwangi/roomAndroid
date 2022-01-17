@@ -16,7 +16,8 @@ import java.util.List;
 @Dao
 public interface NoteDao {
     //create methods for all operations we want to do
-    @Insert //ctrl+b to open
+    @Insert
+    //ctrl+b to open
     void insert(Note note);
 
     @Update
